@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>企業 IT 服務申請與簽核系統 Demo | Louis Kuo</title>
+  <meta name="description" content="企業 IT 服務申請、簽核、SLA、權限角色與維運追蹤 Demo，展示 Louis Kuo 的企業流程、系統設計與 IT 管理能力。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="demo-page">
+  <header class="site-header">
+    <nav class="nav" aria-label="作品導覽">
+      <a class="brand" href="index.html">Louis Kuo</a>
+      <div class="nav-links">
+        <a href="#workflow">流程</a>
+        <a href="#board">看板</a>
+        <a href="#architecture">架構</a>
+        <a href="#value">價值</a>
+        <a class="language-link" href="index.html#portfolio">回履歷</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="demo-hero">
+      <div>
+        <p class="eyebrow">Portfolio Demo / Enterprise IT Workflow</p>
+        <h1>企業 IT 服務申請與簽核系統</h1>
+        <p class="lead">
+          這是一個求職作品 Demo，用來展示我如何把企業 IT 需求、簽核流程、權限控管、SLA 追蹤、
+          維運處理與管理報表整合成可落地的內部系統。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#board">操作 Demo</a>
+          <a class="button secondary" href="#architecture">看系統設計</a>
+        </div>
+      </div>
+      <aside class="demo-brief">
+        <h2>展示重點</h2>
+        <ul class="check-list">
+          <li>申請、主管簽核、IT 分派、完成驗收</li>
+          <li>角色權限：申請人、主管、IT 管理者</li>
+          <li>SLA、優先度、風險與處理紀錄</li>
+          <li>可延伸到 ERP / 企業系統 / 內部流程平台</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="workflow" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Workflow</p>
+        <h2>從需求到交付的管理流程</h2>
+      </div>
+      <div class="workflow-steps">
+        <article>
+          <span>1</span>
+          <h3>需求申請</h3>
+          <p>使用者提交帳號、設備、系統權限、雲端資源或資料異動需求。</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>主管簽核</h3>
+          <p>依部門、成本、資料敏感度與權限風險決定是否核准。</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>IT 分派</h3>
+          <p>IT 管理者依類型、優先度與 SLA 指派處理人員與 Runbook。</p>
+        </article>
+        <article>
+          <span>4</span>
+          <h3>完成驗收</h3>
+          <p>保留處理紀錄、驗收結果與後續改善建議，形成可稽核紀錄。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="board" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Interactive Demo</p>
+        <h2>服務申請看板</h2>
+        <p>切換角色後，畫面會顯示該角色最需要看的資訊。這是前端 Demo，資料為模擬資料。</p>
+      </div>
+
+      <div class="console-toolbar" aria-label="角色切換">
+        <button class="role-button active" type="button" data-role="requester">申請人</button>
+        <button class="role-button" type="button" data-role="manager">主管</button>
+        <button class="role-button" type="button" data-role="it">IT 管理者</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="request-form" aria-label="新增申請">
+          <h3>新增服務申請</h3>
+          <label>
+            需求類型
+            <select id="requestType">
+              <option>ERP 權限調整</option>
+              <option>雲端資源申請</option>
+              <option>帳號與權限</option>
+              <option>設備 / 網路異常</option>
+              <option>資料匯出 / 介接</option>
+            </select>
+          </label>
+          <label>
+            優先度
+            <select id="priority">
+              <option>一般</option>
+              <option>高</option>
+              <option>緊急</option>
+            </select>
+          </label>
+          <label>
+            需求描述
+            <textarea id="requestText" rows="4">財務部新進同仁需要 ERP 查詢權限，需主管核准並保留異動紀錄。</textarea>
+          </label>
+          <button class="button primary" type="button" id="addRequest">送出申請</button>
+        </section>
+
+        <section class="metrics-panel" aria-label="管理指標">
+          <h3>營運指標</h3>
+          <div class="metric-list">
+            <div>
+              <strong id="openCount">0</strong>
+              <span>未結案</span>
+            </div>
+            <div>
+              <strong id="riskCount">0</strong>
+              <span>高風險</span>
+            </div>
+            <div>
+              <strong id="slaCount">0</strong>
+              <span>SLA 內</span>
+            </div>
+          </div>
+          <div class="runbook-box">
+            <h4>建議 Runbook</h4>
+            <p id="runbookText">選取需求後顯示處理步驟。</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="ticket-board" id="ticketBoard" aria-live="polite"></div>
+    </section>
+
+    <section id="architecture" class="section feature">
+      <div class="section-heading">
+        <p class="eyebrow">System Design</p>
+        <h2>可延伸的企業系統架構</h2>
+      </div>
+      <div class="feature-body">
+        <p>
+          真實落地時，前端可接 API 與資料庫，並串接 AD / SSO、郵件通知、工單系統、ERP 權限資料、
+          稽核紀錄與 BI 報表。Demo 的重點是把流程和資料邊界設計清楚。
+        </p>
+        <div class="architecture-grid">
+          <article>
+            <h3>Frontend</h3>
+            <p>申請表單、簽核看板、角色視圖、SLA 狀態與報表。</p>
+          </article>
+          <article>
+            <h3>API Layer</h3>
+            <p>流程狀態機、權限檢查、通知、簽核紀錄與資料驗證。</p>
+          </article>
+          <article>
+            <h3>Integration</h3>
+            <p>AD / SSO、ERP、Email、ITSM、監控與資產管理資料。</p>
+          </article>
+          <article>
+            <h3>Governance</h3>
+            <p>稽核軌跡、異動紀錄、角色權限、SLA 與管理報表。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="value" class="section credentials">
+      <div>
+        <p class="eyebrow">Why This Matters</p>
+        <h2>這個作品能證明什麼</h2>
+      </div>
+      <div class="credential-list">
+        <p><strong>對 HR：</strong>不是只有口頭說會管理流程，而是能把流程變成可操作的系統。</p>
+        <p><strong>對資訊主管：</strong>能理解權限、稽核、SLA、Runbook、供應商與跨部門協作。</p>
+        <p><strong>對 ERP / 企業系統職缺：</strong>能把需求訪談、權限控管、資料介接與上線維運串起來。</p>
+        <p><strong>對 DevOps / SRE 職缺：</strong>能把服務穩定度、事件處理、監控與流程改善納入管理節奏。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tickets = [
+      {
+        id: "REQ-2407-018",
+        type: "ERP 權限調整",
+        requester: "財務部 / Amy",
+        owner: "IT 管理者",
+        priority: "高",
+        risk: "高風險",
+        status: "待主管簽核",
+        sla: "6 小時",
+        desc: "新進同仁需要 ERP 查詢權限，涉及財務資料，需主管核准並保留異動紀錄。",
+        runbook: "確認申請人部門與職務 -> 主管核准 -> 比對權限範本 -> 建立異動紀錄 -> 通知使用者驗收。"
+      },
+      {
+        id: "REQ-2407-021",
+        type: "雲端資源申請",
+        requester: "開發部 / Ken",
+        owner: "Cloud / DevOps",
+        priority: "一般",
+        risk: "中風險",
+        status: "IT 處理中",
+        sla: "1 天",
+        desc: "測試環境需要新增 GCP 專案資源與 Redis 測試節點，需控管預算與 IAM 權限。",
+        runbook: "確認成本中心 -> 建立 GCP 資源 -> 設定 IAM 最小權限 -> 建立監控與預算告警 -> 回填資產紀錄。"
+      },
+      {
+        id: "REQ-2407-024",
+        type: "資料匯出 / 介接",
+        requester: "營運部 / Louis",
+        owner: "Data / IT",
+        priority: "緊急",
+        risk: "高風險",
+        status: "等待驗收",
+        sla: "2 小時",
+        desc: "活動報表需匯出給主管會議使用，需確認資料範圍與遮罩規則。",
+        runbook: "確認資料目的 -> 檢查授權 -> 套用遮罩 -> 匯出只讀檔案 -> 留存下載與交付紀錄。"
+      }
+    ];
+
+    const roleViews = {
+      requester: ["待主管簽核", "IT 處理中", "等待驗收"],
+      manager: ["待主管簽核", "等待驗收"],
+      it: ["IT 處理中", "等待驗收", "待主管簽核"]
+    };
+
+    let activeRole = "requester";
+    let selectedTicket = tickets[0];
+
+    const board = document.querySelector("#ticketBoard");
+    const runbookText = document.querySelector("#runbookText");
+    const openCount = document.querySelector("#openCount");
+    const riskCount = document.querySelector("#riskCount");
+    const slaCount = document.querySelector("#slaCount");
+
+    function render() {
+      const visibleStatuses = roleViews[activeRole];
+      const visibleTickets = tickets.filter(ticket => visibleStatuses.includes(ticket.status));
+      board.innerHTML = visibleTickets.map(ticket => `
+        <article class="ticket-card ${ticket.id === selectedTicket.id ? "selected" : ""}" data-id="${ticket.id}">
+          <div class="ticket-head">
+            <span>${ticket.id}</span>
+            <strong>${ticket.priority}</strong>
+          </div>
+          <h3>${ticket.type}</h3>
+          <p>${ticket.desc}</p>
+          <dl>
+            <div><dt>申請人</dt><dd>${ticket.requester}</dd></div>
+            <div><dt>負責單位</dt><dd>${ticket.owner}</dd></div>
+            <div><dt>狀態</dt><dd>${ticket.status}</dd></div>
+            <div><dt>SLA</dt><dd>${ticket.sla}</dd></div>
+          </dl>
+          <div class="ticket-actions">
+            ${actionButtons(ticket)}
+          </div>
+        </article>
+      `).join("");
+
+      runbookText.textContent = selectedTicket.runbook;
+      openCount.textContent = tickets.filter(ticket => ticket.status !== "完成").length;
+      riskCount.textContent = tickets.filter(ticket => ticket.risk === "高風險").length;
+      slaCount.textContent = tickets.filter(ticket => ticket.sla !== "逾期").length;
+    }
+
+    function actionButtons(ticket) {
+      if (activeRole === "manager" && ticket.status === "待主管簽核") {
+        return '<button type="button" data-action="approve">核准</button><button type="button" data-action="reject">退回</button>';
+      }
+      if (activeRole === "it" && ticket.status === "IT 處理中") {
+        return '<button type="button" data-action="done">完成處理</button>';
+      }
+      if (activeRole === "requester" && ticket.status === "等待驗收") {
+        return '<button type="button" data-action="accept">驗收完成</button>';
+      }
+      return '<button type="button" data-action="select">查看 Runbook</button>';
+    }
+
+    document.querySelectorAll(".role-button").forEach(button => {
+      button.addEventListener("click", () => {
+        activeRole = button.dataset.role;
+        document.querySelectorAll(".role-button").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        render();
+      });
+    });
+
+    board.addEventListener("click", event => {
+      const card = event.target.closest(".ticket-card");
+      if (!card) return;
+      selectedTicket = tickets.find(ticket => ticket.id === card.dataset.id);
+      const action = event.target.dataset.action;
+      if (action === "approve") selectedTicket.status = "IT 處理中";
+      if (action === "reject") selectedTicket.status = "待補資料";
+      if (action === "done") selectedTicket.status = "等待驗收";
+      if (action === "accept") selectedTicket.status = "完成";
+      render();
+    });
+
+    document.querySelector("#addRequest").addEventListener("click", () => {
+      const id = `REQ-2407-${String(tickets.length + 30).padStart(3, "0")}`;
+      const priority = document.querySelector("#priority").value;
+      const type = document.querySelector("#requestType").value;
+      tickets.unshift({
+        id,
+        type,
+        requester: "申請人 / Demo",
+        owner: "待分派",
+        priority,
+        risk: priority === "緊急" ? "高風險" : "中風險",
+        status: "待主管簽核",
+        sla: priority === "緊急" ? "2 小時" : "1 天",
+        desc: document.querySelector("#requestText").value,
+        runbook: "確認申請內容 -> 主管核准 -> IT 評估風險與權限 -> 執行變更 -> 留存紀錄並通知驗收。"
+      });
+      selectedTicket = tickets[0];
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
