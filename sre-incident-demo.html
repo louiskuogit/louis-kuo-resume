@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SRE 維運事件管理 Dashboard Demo | Louis Kuo</title>
+  <meta name="description" content="SRE 維運事件管理、SLA、影響範圍、Runbook、事後檢討與可靠性指標 Demo，展示 Louis Kuo 的雲端維運與技術管理能力。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="demo-page">
+  <header class="site-header">
+    <nav class="nav" aria-label="作品導覽">
+      <a class="brand" href="index.html">Louis Kuo</a>
+      <div class="nav-links">
+        <a href="#overview">總覽</a>
+        <a href="#incidents">事件</a>
+        <a href="#runbook">Runbook</a>
+        <a href="#review">檢討</a>
+        <a class="language-link" href="index.html#portfolio">回履歷</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="demo-hero">
+      <div>
+        <p class="eyebrow">Portfolio Demo / SRE Operations</p>
+        <h1>SRE 維運事件管理 Dashboard</h1>
+        <p class="lead">
+          這個 Demo 展示我如何把雲端服務、監控告警、事件分級、影響範圍、Runbook、
+          SLA 與事後檢討整合成管理者可追蹤的營運看板。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#incidents">查看事件看板</a>
+          <a class="button secondary" href="#review">看事後檢討</a>
+        </div>
+      </div>
+      <aside class="demo-brief">
+        <h2>展示重點</h2>
+        <ul class="check-list">
+          <li>服務狀態、SLA、MTTR 與事件數量</li>
+          <li>P1 / P2 / P3 事件分級與影響範圍</li>
+          <li>Runbook、處理時程與負責角色</li>
+          <li>事後檢討、根因、改善項目與追蹤</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="overview" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Reliability Overview</p>
+        <h2>服務可靠性總覽</h2>
+      </div>
+      <div class="sre-metrics">
+        <article>
+          <span id="availability">99.93%</span>
+          <strong>30 日可用率</strong>
+          <p>以核心票務 API、登入、付款與報表服務為主要觀測範圍。</p>
+        </article>
+        <article>
+          <span id="mttr">42m</span>
+          <strong>平均修復時間</strong>
+          <p>包含偵測、分派、處理、驗收與對外溝通。</p>
+        </article>
+        <article>
+          <span id="openIncidents">0</span>
+          <strong>開啟中事件</strong>
+          <p>依 P1 / P2 / P3 事件分級與 SLA 追蹤。</p>
+        </article>
+        <article>
+          <span id="actionItems">0</span>
+          <strong>改善追蹤項目</strong>
+          <p>事後檢討產生的技術債、監控與流程改善。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="incidents" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Incident Board</p>
+        <h2>事件處理看板</h2>
+        <p>點選事件可切換右側 Runbook 與處理時程；也可將事件標記為已緩解。</p>
+      </div>
+      <div class="incident-layout">
+        <div>
+          <div class="console-toolbar" aria-label="事件篩選">
+            <button class="role-button active" type="button" data-filter="all">全部</button>
+            <button class="role-button" type="button" data-filter="P1">P1</button>
+            <button class="role-button" type="button" data-filter="P2">P2</button>
+            <button class="role-button" type="button" data-filter="P3">P3</button>
+          </div>
+          <div class="incident-list" id="incidentList" aria-live="polite"></div>
+        </div>
+        <aside class="metrics-panel incident-detail">
+          <h3 id="incidentTitle">選取事件</h3>
+          <p id="incidentSummary">點選左側事件後，這裡會顯示影響範圍與處理建議。</p>
+          <dl class="detail-list">
+            <div><dt>服務</dt><dd id="detailService">-</dd></div>
+            <div><dt>影響</dt><dd id="detailImpact">-</dd></div>
+            <div><dt>負責人</dt><dd id="detailOwner">-</dd></div>
+            <div><dt>SLA</dt><dd id="detailSla">-</dd></div>
+          </dl>
+          <button class="button primary" type="button" id="mitigateButton">標記已緩解</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="runbook" class="section feature">
+      <div class="section-heading">
+        <p class="eyebrow">Runbook</p>
+        <h2>標準處理步驟</h2>
+      </div>
+      <div class="feature-body">
+        <p id="runbookLead">選取事件後顯示對應 Runbook。</p>
+        <ol class="runbook-list" id="runbookList"></ol>
+      </div>
+    </section>
+
+    <section id="review" class="section credentials">
+      <div>
+        <p class="eyebrow">Postmortem</p>
+        <h2>事後檢討與改善追蹤</h2>
+      </div>
+      <div class="credential-list" id="reviewList"></div>
+    </section>
+  </main>
+
+  <script>
+    const incidents = [
+      {
+        id: "INC-2407-101",
+        level: "P1",
+        title: "票務 API 回應時間異常",
+        service: "GKE / Ticket API",
+        status: "處理中",
+        impact: "購票流程延遲，約 18% 使用者受影響",
+        owner: "SRE Lead",
+        sla: "30 分鐘內緩解",
+        summary: "尖峰流量下 API latency 上升，Redis hit rate 下降，需同時檢查快取、DB connection 與 autoscaling。",
+        runbook: [
+          "確認監控告警來源與影響服務範圍",
+          "檢查 GKE HPA、Pod restart、CPU / memory 與 error rate",
+          "檢查 Redis hit rate、Cloud SQL connection 與 slow query",
+          "啟動限流與快取保護策略，必要時擴充節點",
+          "每 15 分鐘同步狀態給客服、營運與主管"
+        ],
+        actions: ["補 Redis hit rate 告警", "建立尖峰活動容量檢查表", "壓測流程納入上線檢查"]
+      },
+      {
+        id: "INC-2407-108",
+        level: "P2",
+        title: "VPN 登入失敗率升高",
+        service: "VPN / Firewall",
+        status: "觀察中",
+        impact: "部分遠端同仁無法連線內部系統",
+        owner: "Network Team",
+        sla: "4 小時內緩解",
+        summary: "VPN 驗證異常集中於特定 ISP，初步判斷與路由或設備 session table 壓力有關。",
+        runbook: [
+          "確認失敗使用者來源、ISP 與錯誤碼",
+          "檢查 VPN gateway session、CPU、memory 與 license 使用率",
+          "切換備援 gateway 或調整連線路由",
+          "通知受影響使用者替代連線方式",
+          "保留設備 log 供供應商分析"
+        ],
+        actions: ["建立 VPN 容量儀表板", "更新遠端工作連線 SOP"]
+      },
+      {
+        id: "INC-2407-116",
+        level: "P3",
+        title: "報表匯出排程延遲",
+        service: "Internal Report",
+        status: "待處理",
+        impact: "營運日報延遲 25 分鐘",
+        owner: "IT Operations",
+        sla: "下一工作日前處理",
+        summary: "排程與資料庫備份時間重疊，造成報表產出延遲。",
+        runbook: [
+          "確認排程時間與資料來源",
+          "檢查 DB backup、ETL job 與報表服務 log",
+          "調整排程避免資源尖峰重疊",
+          "補上排程失敗通知",
+          "通知營運單位新的報表產出時間"
+        ],
+        actions: ["重排備份與報表時程", "新增排程失敗 Teams / Email 通知"]
+      }
+    ];
+
+    let activeFilter = "all";
+    let selected = incidents[0];
+
+    const incidentList = document.querySelector("#incidentList");
+    const reviewList = document.querySelector("#reviewList");
+    const runbookList = document.querySelector("#runbookList");
+    const runbookLead = document.querySelector("#runbookLead");
+
+    function renderIncidents() {
+      const filtered = activeFilter === "all" ? incidents : incidents.filter(item => item.level === activeFilter);
+      incidentList.innerHTML = filtered.map(item => `
+        <article class="incident-card ${item.id === selected.id ? "selected" : ""}" data-id="${item.id}">
+          <div class="incident-head">
+            <span class="severity ${item.level.toLowerCase()}">${item.level}</span>
+            <strong>${item.status}</strong>
+          </div>
+          <h3>${item.title}</h3>
+          <p>${item.summary}</p>
+          <div class="incident-meta">
+            <span>${item.service}</span>
+            <span>${item.sla}</span>
+          </div>
+        </article>
+      `).join("");
+
+      document.querySelector("#openIncidents").textContent = incidents.filter(item => item.status !== "已緩解").length;
+      document.querySelector("#actionItems").textContent = incidents.reduce((total, item) => total + item.actions.length, 0);
+      renderDetail();
+      renderReview();
+    }
+
+    function renderDetail() {
+      document.querySelector("#incidentTitle").textContent = `${selected.id} ${selected.title}`;
+      document.querySelector("#incidentSummary").textContent = selected.summary;
+      document.querySelector("#detailService").textContent = selected.service;
+      document.querySelector("#detailImpact").textContent = selected.impact;
+      document.querySelector("#detailOwner").textContent = selected.owner;
+      document.querySelector("#detailSla").textContent = selected.sla;
+      runbookLead.textContent = `${selected.service} 的標準處理流程：`;
+      runbookList.innerHTML = selected.runbook.map(step => `<li>${step}</li>`).join("");
+    }
+
+    function renderReview() {
+      reviewList.innerHTML = incidents.map(item => `
+        <p><strong>${item.id} ${item.title}：</strong>${item.actions.join("、")}</p>
+      `).join("");
+    }
+
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        renderIncidents();
+      });
+    });
+
+    incidentList.addEventListener("click", event => {
+      const card = event.target.closest(".incident-card");
+      if (!card) return;
+      selected = incidents.find(item => item.id === card.dataset.id);
+      renderIncidents();
+    });
+
+    document.querySelector("#mitigateButton").addEventListener("click", () => {
+      selected.status = "已緩解";
+      renderIncidents();
+    });
+
+    renderIncidents();
+  </script>
+</body>
+</html>
