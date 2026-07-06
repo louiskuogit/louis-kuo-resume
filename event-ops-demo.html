@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>活動報名與票務營運後台 Demo | Louis Kuo</title>
+  <meta name="description" content="活動報名、票務容量、訂單付款、尖峰流量、客服事件與營運監控 Demo，展示 Louis Kuo 的票務平台、雲端維運與資訊管理能力。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="demo-page">
+  <header class="site-header">
+    <nav class="nav" aria-label="作品導覽">
+      <a class="brand" href="index.html">Louis Kuo</a>
+      <div class="nav-links">
+        <a href="#overview">總覽</a>
+        <a href="#capacity">票區</a>
+        <a href="#operations">營運</a>
+        <a href="#architecture">架構</a>
+        <a class="language-link" href="index.html#portfolio">回履歷</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="demo-hero">
+      <div>
+        <p class="eyebrow">Portfolio Demo / Event & Ticketing Operations</p>
+        <h1>活動報名與票務營運後台</h1>
+        <p class="lead">
+          這個 Demo 模擬活動報名與票務平台的營運後台，包含票區容量、訂單付款、尖峰流量、
+          客服事件、風險狀態與雲端架構，展示我能把營運需求轉成可管理的系統。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#capacity">查看票區容量</a>
+          <a class="button secondary" href="#operations">看營運事件</a>
+        </div>
+      </div>
+      <aside class="demo-brief">
+        <h2>展示重點</h2>
+        <ul class="check-list">
+          <li>票區容量、售出、保留票與售罄風險</li>
+          <li>訂單轉換率、付款佇列、失敗交易與客服量</li>
+          <li>尖峰流量保護、快取、排隊與雲端擴展概念</li>
+          <li>適用票務、活動報名、會員服務與企業營運系統</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="overview" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Operations Overview</p>
+        <h2>活動營運總覽</h2>
+        <p>切換活動與流量模式後，下方容量與營運指標會同步更新。資料為前端模擬，用來展示系統設計與管理思維。</p>
+      </div>
+      <div class="event-controls">
+        <label>
+          活動
+          <select id="eventSelect">
+            <option value="concert">大型售票活動</option>
+            <option value="conference">企業研討會</option>
+            <option value="training">內部教育訓練</option>
+          </select>
+        </label>
+        <div class="console-toolbar" aria-label="流量模式">
+          <button class="role-button active" type="button" data-traffic="normal">一般流量</button>
+          <button class="role-button" type="button" data-traffic="peak">尖峰流量</button>
+        </div>
+      </div>
+      <div class="sre-metrics event-metrics">
+        <article>
+          <span id="registrationTotal">0</span>
+          <strong>報名 / 訂單數</strong>
+          <p>包含完成付款與保留中的訂單。</p>
+        </article>
+        <article>
+          <span id="paidRate">0%</span>
+          <strong>付款完成率</strong>
+          <p>用來判斷付款流程、金流穩定度與客服壓力。</p>
+        </article>
+        <article>
+          <span id="capacityRate">0%</span>
+          <strong>容量使用率</strong>
+          <p>依票區容量、售出數與保留票計算。</p>
+        </article>
+        <article>
+          <span id="riskLevel">正常</span>
+          <strong>營運風險</strong>
+          <p>綜合尖峰流量、付款佇列、錯誤率與售罄壓力。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="capacity" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Ticket Capacity</p>
+        <h2>票區容量與庫存管理</h2>
+        <p>點選票區可查看建議處理方式；也可模擬釋出保留票或啟動尖峰保護。</p>
+      </div>
+      <div class="event-layout">
+        <div>
+          <div class="zone-grid" id="zoneGrid" aria-live="polite"></div>
+          <div class="event-actions">
+            <button class="button primary" type="button" id="releaseButton">釋出保留票</button>
+            <button class="button secondary" type="button" id="protectButton">啟動尖峰保護</button>
+          </div>
+        </div>
+        <aside class="metrics-panel zone-detail">
+          <h3 id="zoneTitle">選取票區</h3>
+          <p id="zoneSummary">點選左側票區後，這裡會顯示容量、風險與處理建議。</p>
+          <dl class="detail-list">
+            <div><dt>容量</dt><dd id="zoneCapacity">-</dd></div>
+            <div><dt>售出</dt><dd id="zoneSold">-</dd></div>
+            <div><dt>保留票</dt><dd id="zoneReserved">-</dd></div>
+            <div><dt>狀態</dt><dd id="zoneStatus">-</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section id="operations" class="section demo-console">
+      <div class="section-heading">
+        <p class="eyebrow">Command Center</p>
+        <h2>營運事件與服務狀態</h2>
+      </div>
+      <div class="ops-grid">
+        <article>
+          <span id="paymentQueue">0</span>
+          <strong>付款佇列</strong>
+          <p>金流等待與重試中的訂單量。</p>
+        </article>
+        <article>
+          <span id="failedOrders">0</span>
+          <strong>失敗訂單</strong>
+          <p>付款失敗、逾時或庫存鎖定失敗。</p>
+        </article>
+        <article>
+          <span id="supportCases">0</span>
+          <strong>客服事件</strong>
+          <p>退款、重複扣款、報名資料修改與會員登入問題。</p>
+        </article>
+      </div>
+      <div class="operations-list" id="operationsList"></div>
+    </section>
+
+    <section id="architecture" class="section feature">
+      <div class="section-heading">
+        <p class="eyebrow">System Design</p>
+        <h2>從網站到營運後台的架構思維</h2>
+      </div>
+      <div class="feature-body">
+        <p>
+          真實落地時，前台報名頁、會員登入、付款流程、票券庫存、客服後台與營運報表會拆成清楚的服務邊界；
+          尖峰活動則需要 CDN、快取、排隊、容量壓測、監控告警與可回溯的操作紀錄。
+        </p>
+        <div class="architecture-grid">
+          <article>
+            <h3>Frontend</h3>
+            <p>活動頁、報名表、會員中心、票券資訊與付款流程。</p>
+          </article>
+          <article>
+            <h3>API & Queue</h3>
+            <p>訂單狀態、庫存鎖定、付款回呼、排隊與重試機制。</p>
+          </article>
+          <article>
+            <h3>Cloud Operations</h3>
+            <p>GKE / VM、CDN、快取、監控告警、自動擴展與備援。</p>
+          </article>
+          <article>
+            <h3>Management</h3>
+            <p>營運報表、客服事件、權限控管、稽核紀錄與改善追蹤。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section credentials">
+      <div>
+        <p class="eyebrow">Why This Matters</p>
+        <h2>這個作品能幫履歷加分的地方</h2>
+      </div>
+      <div class="credential-list">
+        <p><strong>對票務 / 活動平台：</strong>能理解售票尖峰、庫存鎖定、付款、客服與營運報表，不只是做畫面。</p>
+        <p><strong>對資訊主管職：</strong>能把業務流程、系統穩定度、跨部門協作與管理指標整合在一起。</p>
+        <p><strong>對 DevOps / SRE 職缺：</strong>能說明尖峰流量、容量規劃、監控告警、Runbook 與故障應變。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const eventData = {
+      concert: {
+        registrations: 18420,
+        paidRate: 91,
+        queue: 320,
+        failed: 86,
+        support: 42,
+        zones: [
+          { name: "VIP 區", capacity: 800, sold: 762, reserved: 28, status: "高壓", note: "接近售罄，需確認保留票釋出規則與黃牛風險。" },
+          { name: "A 區", capacity: 4200, sold: 3850, reserved: 120, status: "高壓", note: "熱門票區，建議開啟排隊與付款逾時回補機制。" },
+          { name: "B 區", capacity: 7000, sold: 5380, reserved: 180, status: "穩定", note: "容量仍足夠，可觀察轉換率與付款失敗原因。" },
+          { name: "無障礙席", capacity: 120, sold: 78, reserved: 10, status: "穩定", note: "需保留人工客服與身份確認流程。" }
+        ],
+        events: ["付款回呼延遲升高，已啟動重試佇列", "VIP 區庫存壓力高，需確認保留票政策", "客服量集中在付款逾時與訂單查詢"]
+      },
+      conference: {
+        registrations: 1280,
+        paidRate: 84,
+        queue: 28,
+        failed: 12,
+        support: 18,
+        zones: [
+          { name: "一般票", capacity: 900, sold: 620, reserved: 42, status: "穩定", note: "仍有容量，可強化企業團報流程。" },
+          { name: "VIP 交流票", capacity: 120, sold: 112, reserved: 4, status: "高壓", note: "接近額滿，建議顯示候補與人工審核流程。" },
+          { name: "線上票", capacity: 2000, sold: 548, reserved: 0, status: "穩定", note: "線上票可搭配直播權限與提醒通知。" },
+          { name: "講者 / 貴賓", capacity: 80, sold: 52, reserved: 20, status: "觀察", note: "需控管名單匯入、權限與報到狀態。" }
+        ],
+        events: ["企業團報名單待補資料", "VIP 交流票接近額滿", "直播權限開通排程已建立"]
+      },
+      training: {
+        registrations: 340,
+        paidRate: 100,
+        queue: 0,
+        failed: 0,
+        support: 6,
+        zones: [
+          { name: "台北場", capacity: 160, sold: 138, reserved: 8, status: "穩定", note: "可追蹤報到率與課後問卷。" },
+          { name: "新竹場", capacity: 120, sold: 96, reserved: 10, status: "穩定", note: "建議補上候補與自動通知。" },
+          { name: "線上同步", capacity: 500, sold: 106, reserved: 0, status: "穩定", note: "可串接會議連結與簽到紀錄。" },
+          { name: "主管保留名額", capacity: 40, sold: 18, reserved: 18, status: "觀察", note: "需確認釋出時間與部門優先順序。" }
+        ],
+        events: ["內部課程報名正常", "主管保留名額需於開課前 3 天釋出", "課後問卷與出席報表排程完成"]
+      }
+    };
+
+    let activeEvent = "concert";
+    let trafficMode = "normal";
+    let selectedZone = eventData.concert.zones[0];
+    let peakProtection = false;
+
+    const zoneGrid = document.querySelector("#zoneGrid");
+    const operationsList = document.querySelector("#operationsList");
+
+    function currentData() {
+      return eventData[activeEvent];
+    }
+
+    function usage(zone) {
+      return Math.round(((zone.sold + zone.reserved) / zone.capacity) * 100);
+    }
+
+    function render() {
+      const data = currentData();
+      const trafficMultiplier = trafficMode === "peak" ? 1.7 : 1;
+      const totalCapacity = data.zones.reduce((total, zone) => total + zone.capacity, 0);
+      const usedCapacity = data.zones.reduce((total, zone) => total + zone.sold + zone.reserved, 0);
+      const risk = trafficMode === "peak" && !peakProtection ? "偏高" : data.zones.some(zone => usage(zone) >= 95) ? "觀察" : "正常";
+
+      document.querySelector("#registrationTotal").textContent = data.registrations.toLocaleString("zh-TW");
+      document.querySelector("#paidRate").textContent = `${data.paidRate}%`;
+      document.querySelector("#capacityRate").textContent = `${Math.round((usedCapacity / totalCapacity) * 100)}%`;
+      document.querySelector("#riskLevel").textContent = risk;
+      document.querySelector("#paymentQueue").textContent = Math.round(data.queue * trafficMultiplier);
+      document.querySelector("#failedOrders").textContent = Math.round(data.failed * trafficMultiplier);
+      document.querySelector("#supportCases").textContent = Math.round(data.support * trafficMultiplier);
+
+      zoneGrid.innerHTML = data.zones.map(zone => `
+        <article class="zone-card ${zone.name === selectedZone.name ? "selected" : ""}" data-zone="${zone.name}">
+          <div class="ticket-head">
+            <span>${zone.name}</span>
+            <strong>${zone.status}</strong>
+          </div>
+          <h3>${usage(zone)}%</h3>
+          <p>${zone.note}</p>
+          <div class="capacity-bar" aria-label="${zone.name} capacity">
+            <span style="width: ${Math.min(usage(zone), 100)}%"></span>
+          </div>
+          <dl>
+            <div><dt>容量</dt><dd>${zone.capacity.toLocaleString("zh-TW")}</dd></div>
+            <div><dt>售出</dt><dd>${zone.sold.toLocaleString("zh-TW")}</dd></div>
+            <div><dt>保留</dt><dd>${zone.reserved.toLocaleString("zh-TW")}</dd></div>
+          </dl>
+        </article>
+      `).join("");
+
+      operationsList.innerHTML = [
+        ...data.events,
+        peakProtection ? "尖峰保護已啟動：CDN 快取、排隊頁與付款重試策略已套用" : "尖峰保護未啟動：若進入大量流量需先完成容量確認"
+      ].map(item => `<p><strong>營運紀錄：</strong>${item}</p>`).join("");
+
+      renderZoneDetail();
+    }
+
+    function renderZoneDetail() {
+      document.querySelector("#zoneTitle").textContent = selectedZone.name;
+      document.querySelector("#zoneSummary").textContent = selectedZone.note;
+      document.querySelector("#zoneCapacity").textContent = selectedZone.capacity.toLocaleString("zh-TW");
+      document.querySelector("#zoneSold").textContent = selectedZone.sold.toLocaleString("zh-TW");
+      document.querySelector("#zoneReserved").textContent = selectedZone.reserved.toLocaleString("zh-TW");
+      document.querySelector("#zoneStatus").textContent = `${selectedZone.status} / ${usage(selectedZone)}%`;
+    }
+
+    document.querySelector("#eventSelect").addEventListener("change", event => {
+      activeEvent = event.target.value;
+      selectedZone = currentData().zones[0];
+      peakProtection = false;
+      render();
+    });
+
+    document.querySelectorAll("[data-traffic]").forEach(button => {
+      button.addEventListener("click", () => {
+        trafficMode = button.dataset.traffic;
+        document.querySelectorAll("[data-traffic]").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        render();
+      });
+    });
+
+    zoneGrid.addEventListener("click", event => {
+      const card = event.target.closest(".zone-card");
+      if (!card) return;
+      selectedZone = currentData().zones.find(zone => zone.name === card.dataset.zone);
+      render();
+    });
+
+    document.querySelector("#releaseButton").addEventListener("click", () => {
+      const releaseCount = Math.min(selectedZone.reserved, Math.ceil(selectedZone.capacity * 0.03));
+      selectedZone.reserved -= releaseCount;
+      selectedZone.sold += releaseCount;
+      render();
+    });
+
+    document.querySelector("#protectButton").addEventListener("click", () => {
+      peakProtection = true;
+      trafficMode = "peak";
+      document.querySelectorAll("[data-traffic]").forEach(item => {
+        item.classList.toggle("active", item.dataset.traffic === "peak");
+      });
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
