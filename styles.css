@@ -434,6 +434,11 @@ h3 {
   padding: 24px;
 }
 
+.leadership-card {
+  border-color: #8db4ac;
+  background: #f7fbfa;
+}
+
 .portfolio-list {
   display: grid;
   gap: 16px;
@@ -458,6 +463,56 @@ h3 {
   font-size: 13px;
   font-weight: 800;
   background: #ffffff;
+}
+
+.leadership-hero {
+  min-height: 360px;
+}
+
+.case-grid,
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.case-grid article,
+.plan-grid article,
+.signal-list p {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(23, 33, 43, 0.05);
+}
+
+.case-grid span,
+.plan-grid span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  height: 34px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  background: #dfece9;
+  color: var(--accent-dark);
+  font-weight: 900;
+}
+
+.case-grid p,
+.plan-grid p,
+.signal-list p {
+  color: var(--muted);
+}
+
+.leadership-plan {
+  align-items: start;
+}
+
+.signal-list {
+  display: grid;
+  gap: 12px;
 }
 
 .demo-page {
@@ -987,7 +1042,9 @@ h3 {
   .workflow-steps,
   .ticket-board,
   .sre-metrics,
-  .ops-grid {
+  .ops-grid,
+  .case-grid,
+  .plan-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1040,7 +1097,9 @@ h3 {
   .architecture-grid,
   .sre-metrics,
   .zone-grid,
-  .ops-grid {
+  .ops-grid,
+  .case-grid,
+  .plan-grid {
     grid-template-columns: 1fr;
   }
 
