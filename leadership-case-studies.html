@@ -13,6 +13,7 @@
       <a class="brand" href="index.html">Louis Kuo</a>
       <div class="nav-links">
         <a href="#cases">Cases</a>
+        <a href="#architecture">Architecture</a>
         <a href="#plan">90 Days</a>
         <a href="#signals">Hiring Signals</a>
         <a href="index.html#portfolio">Back</a>
@@ -89,6 +90,95 @@
             <li>面試主軸：budget、vendor、KPI、stakeholder management</li>
             <li>可連結作品：Event / Ticketing Operations Demo</li>
           </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Architecture Proof</p>
+        <h2>Network / Firewall / SLB architecture evidence</h2>
+        <p>
+          These diagrams show the infrastructure scope I can discuss in interviews:
+          network segmentation, firewall policy, SLB traffic flow, monitoring, failover,
+          and operational ownership across teams and vendors.
+        </p>
+      </div>
+      <div class="architecture-proof-grid">
+        <article class="architecture-proof-card">
+          <div class="architecture-title">
+            <span>01</span>
+            <h3>Hybrid Network Boundary</h3>
+          </div>
+          <div class="architecture-diagram hybrid-diagram" aria-label="Hybrid network architecture diagram">
+            <div class="diagram-node internet">Internet</div>
+            <div class="diagram-line horizontal"></div>
+            <div class="diagram-node edge">Edge Router</div>
+            <div class="diagram-line horizontal"></div>
+            <div class="diagram-node firewall">Firewall / VPN</div>
+            <div class="diagram-line horizontal"></div>
+            <div class="diagram-node core">Core Switch</div>
+            <div class="diagram-branch">
+              <div class="diagram-node dmz">DMZ</div>
+              <div class="diagram-node lan">Office LAN</div>
+              <div class="diagram-node cloud">Cloud VPC</div>
+            </div>
+          </div>
+          <p>
+            Useful for IT Manager and Infrastructure Manager interviews: explains how I
+            separate DMZ, office, server, and cloud traffic while keeping VPN access,
+            monitoring, and vendor support auditable.
+          </p>
+        </article>
+
+        <article class="architecture-proof-card">
+          <div class="architecture-title">
+            <span>02</span>
+            <h3>Firewall Security Zones</h3>
+          </div>
+          <div class="architecture-diagram zone-diagram" aria-label="Firewall security zone diagram">
+            <div class="zone-row">
+              <div class="diagram-node internet">Internet</div>
+              <div class="diagram-node firewall">Firewall Policy</div>
+              <div class="diagram-node dmz">DMZ Web</div>
+            </div>
+            <div class="zone-row">
+              <div class="diagram-node admin">Admin VPN</div>
+              <div class="diagram-node app">App Zone</div>
+              <div class="diagram-node data">DB / Backup</div>
+            </div>
+            <div class="policy-strip">ACL review / change control / logging / incident escalation</div>
+          </div>
+          <p>
+            Shows governance beyond device maintenance: policy ownership, ACL reviews,
+            privileged access, logging, backup boundaries, and change control.
+          </p>
+        </article>
+
+        <article class="architecture-proof-card">
+          <div class="architecture-title">
+            <span>03</span>
+            <h3>SLB High Availability Flow</h3>
+          </div>
+          <div class="architecture-diagram slb-diagram" aria-label="SLB high availability service diagram">
+            <div class="diagram-node dns">DNS</div>
+            <div class="diagram-line vertical"></div>
+            <div class="diagram-node slb">SLB / F5 / LVS</div>
+            <div class="slb-pool">
+              <div class="diagram-node web">Web 01</div>
+              <div class="diagram-node web">Web 02</div>
+              <div class="diagram-node web">Web 03</div>
+            </div>
+            <div class="diagram-branch">
+              <div class="diagram-node app">App</div>
+              <div class="diagram-node data">DB</div>
+              <div class="diagram-node monitor">Monitoring</div>
+            </div>
+          </div>
+          <p>
+            Good evidence for platform and SRE roles: health checks, failover, capacity
+            planning, traffic routing, incident playbooks, and observable service levels.
+          </p>
         </article>
       </div>
     </section>

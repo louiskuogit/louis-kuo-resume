@@ -506,6 +506,140 @@ h3 {
   color: var(--muted);
 }
 
+.architecture-proof-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.architecture-proof-card {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.34fr) minmax(0, 0.66fr);
+  gap: 22px;
+  align-items: start;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(23, 33, 43, 0.05);
+}
+
+.architecture-title {
+  display: grid;
+  gap: 10px;
+}
+
+.architecture-title span {
+  width: 52px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #dfece9;
+  color: var(--accent-dark);
+  font-weight: 900;
+}
+
+.architecture-proof-card p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.architecture-diagram {
+  min-height: 210px;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #dfe8ec;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(15, 118, 110, 0.05) 1px, transparent 1px),
+    #f8fbfb;
+  background-size: 24px 24px;
+}
+
+.diagram-node {
+  min-width: 104px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid #b9cbd0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #24313b;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(23, 33, 43, 0.08);
+}
+
+.diagram-node.firewall,
+.diagram-node.slb {
+  border-color: #0f766e;
+  background: #e7f4f2;
+  color: var(--accent-dark);
+}
+
+.diagram-node.data {
+  border-color: #b7791f;
+  background: #fff7e8;
+}
+
+.diagram-line {
+  background: #8aa0aa;
+}
+
+.diagram-line.horizontal {
+  width: 34px;
+  height: 2px;
+}
+
+.diagram-line.vertical {
+  width: 2px;
+  height: 28px;
+}
+
+.hybrid-diagram {
+  grid-template-columns: auto 34px auto 34px auto 34px auto;
+}
+
+.hybrid-diagram .diagram-branch {
+  grid-column: 1 / -1;
+}
+
+.diagram-branch,
+.slb-pool,
+.zone-row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.zone-diagram,
+.slb-diagram {
+  align-content: center;
+}
+
+.policy-strip {
+  width: min(100%, 560px);
+  padding: 10px 12px;
+  border: 1px dashed #97abb3;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
 .leadership-plan {
   align-items: start;
 }
@@ -1031,6 +1165,7 @@ h3 {
   .portfolio-showcase,
   .demo-hero,
   .dashboard-grid,
+  .architecture-proof-card,
   .incident-layout,
   .event-layout {
     grid-template-columns: 1fr;
@@ -1094,6 +1229,7 @@ h3 {
   .skill-groups,
   .workflow-steps,
   .ticket-board,
+  .hybrid-diagram,
   .architecture-grid,
   .sre-metrics,
   .zone-grid,
